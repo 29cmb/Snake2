@@ -1,6 +1,7 @@
 local ScreenManager = {}
+local utils = require("modules.utils")
 ScreenManager.screens = {}
-ScreenManager.currentScreen = nil
+ScreenManager.currentScreens = {}
 
 function ScreenManager:registerAllScreens()
     self:registerScreen(require("screens.SnakeLayer"))
@@ -14,7 +15,7 @@ end
 
 function ScreenManager:DrawScreens()
     for i,v in pairs(self.screens) do
-        if v == currentScreen then 
+        if utils:TableFind(self.currentScreens, v) then 
             v:Draw()
         end
     end
@@ -22,7 +23,7 @@ end
 
 function ScreenManager:UpdateScreens(dt)
     for i,v in pairs(self.screens) do
-        if v == currentScreen then 
+        if utils:TableFind(self.currentScreens, v) then 
             v:Update(dt)
         end
     end
@@ -30,7 +31,7 @@ end
 
 function ScreenManager:OnKeyPressed(key)
     for i,v in pairs(self.screens) do
-        if v == currentScreen then 
+        if utils:TableFind(self.currentScreens, v) then 
             v:OnKeyPressed(key)
         end
     end
@@ -39,7 +40,7 @@ end
 function ScreenManager:showScreen(screenName)
     for i,v in pairs(self.screens) do
         if v.name == screenName then
-            currentScreen = v
+            table.insert(self.currentScreens, v)
             print("Showing screen: " .. screenName)
             return
         end

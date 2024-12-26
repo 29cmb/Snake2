@@ -1,6 +1,8 @@
 local ScreenManager = require("screens.ScreenManager")
+local images = require("modules.images")
 
 function love.load()
+    images:Load()
     ScreenManager:registerAllScreens()
     ScreenManager:showScreen("SnakeLayer")
 end
