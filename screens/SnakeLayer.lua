@@ -1,5 +1,5 @@
 local SnakeLayer = {}
-local SNAKE_SPEED = 3
+local SNAKE_SPEED = 4.5
 local utils = require("modules.utils")
 
 SnakeLayer.name = "SnakeLayer"
@@ -8,7 +8,7 @@ SnakeLayer.direction = "right"
 SnakeLayer.alive = true
 
 -- Variables that can be changed for upgrades when I eventually make that
-SnakeLayer.foodSpawnAmount = 20
+SnakeLayer.foodSpawnAmount = 1
 SnakeLayer.growthIncrease = 10
 
 local foodLocations = {
@@ -26,7 +26,7 @@ end
 function SnakeLayer:Draw()
     love.graphics.setColor(255, 0, 0)
     for _, food in pairs(foodLocations) do
-        love.graphics.rectangle("fill", food.x + 10, food.y + 10, 20, 20)
+        love.graphics.circle("fill", food.x + 10, food.y + 10, 10)
     end
 
     if self.alive == false then
@@ -36,7 +36,7 @@ function SnakeLayer:Draw()
     end
 
     for _, segment in ipairs(self.segments) do
-        love.graphics.rectangle("fill", segment.x + 10, segment.y + 10, 20, 20)
+        love.graphics.rectangle("fill", segment.x + 10, segment.y + 10, 20, 20, 5, 5)
     end
 
     love.graphics.setColor(255, 255, 255)
@@ -80,6 +80,12 @@ function SnakeLayer:Update()
 
             end
             
+        end
+    end
+
+    for index,segment in pairs(self.segments) do
+        if utils:CheckCollision(head.x, head.y, 20, 20, segment.x, segment.y, 20, 20) and index > 11 then
+            self.alive = false
         end
     end
 end
