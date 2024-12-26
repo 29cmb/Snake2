@@ -1,6 +1,7 @@
 local SnakeLayer = {}
 local SNAKE_SPEED = 4.5
 local utils = require("modules.utils")
+local style = require("modules.style")
 
 SnakeLayer.name = "SnakeLayer"
 SnakeLayer.segments = {}
@@ -21,12 +22,14 @@ function SnakeLayer:Load()
     self.segments = {
         {x = startX, y = startY}
     }
+    self.font24 = love.graphics.newFont(24)
 end
 
 function SnakeLayer:Draw()
+    love.graphics.setBackgroundColor(18/255, 53/255, 84/255)
     love.graphics.setColor(255, 0, 0)
     for _, food in pairs(foodLocations) do
-        love.graphics.circle("fill", food.x + 10, food.y + 10, 10)
+        love.graphics.rectangle("fill", food.x + 10, food.y + 10, 20, 20, 30)
     end
 
     if self.alive == false then
@@ -40,6 +43,10 @@ function SnakeLayer:Draw()
     end
 
     love.graphics.setColor(255, 255, 255)
+
+    -- UI
+    love.graphics.setFont(self.font24)
+    style:DropShadow("Score: " .. #self.segments - 1, 10, 10, love.graphics.getWidth(), "center", 3, 90)
 end
 
 function SnakeLayer:Update()
@@ -77,9 +84,7 @@ function SnakeLayer:Update()
                         {x = math.random(20, love.graphics.getWidth() - 20), y = math.random(20, love.graphics.getHeight() - 20)}
                     )
                 end
-
             end
-            
         end
     end
 
