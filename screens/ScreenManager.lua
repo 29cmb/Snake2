@@ -4,6 +4,7 @@ ScreenManager.screens = {}
 ScreenManager.currentScreens = {}
 
 function ScreenManager:registerAllScreens()
+    self:registerScreen(require("screens.MenuLayer"))
     self:registerScreen(require("screens.SnakeLayer"))
 end
 
@@ -61,6 +62,22 @@ function ScreenManager:hideScreen(screenName)
     end
 
     warn("Screen not found: " .. screenName)
+end
+
+function ScreenManager:OnMousePressed(x, y, button)
+    for i,v in pairs(self.screens) do
+        if utils:TableFind(self.currentScreens, v) then 
+            v:OnMousePressed(x, y, button)
+        end
+    end
+end
+
+function ScreenManager:OnMouseMoved(x, y, dx, dy, istouch)
+    for i,v in pairs(self.screens) do
+        if utils:TableFind(self.currentScreens, v) then 
+            v:OnMouseMoved(x, y, dx, dy, istouch)
+        end
+    end
 end
 
 return ScreenManager

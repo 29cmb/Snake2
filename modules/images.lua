@@ -1,6 +1,8 @@
 local images = {
     Sprites = { 
-        ["heart"] = "images/heart.png" 
+        ["heart"] = "images/heart.png",
+        ["logo"] = "images/logo.png",
+        ["play"] = "images/play.png"
     }
 }
 

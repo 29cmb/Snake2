@@ -7,10 +7,11 @@ local images = require("modules.images")
 SnakeLayer.name = "SnakeLayer"
 SnakeLayer.segments = {}
 SnakeLayer.direction = "right"
-SnakeLayer.maxLives = 10
-SnakeLayer.lives = 10
+SnakeLayer.maxLives = 1
+SnakeLayer.lives = 1
 SnakeLayer.alive = true
 SnakeLayer.spawnProtectionTicks = 0
+SnakeLayer.startDelay = 1
 
 -- Variables that can be changed for upgrades when I eventually make that
 SnakeLayer.foodSpawnAmount = 1
@@ -23,16 +24,18 @@ local foodLocations = {
 }
 
 function SnakeLayer:Load()
-    local startX = love.graphics.getWidth() / 2
-    local startY = love.graphics.getHeight() / 2
-    self.segments = {
-        {x = startX, y = startY}
-    }
     self.font24 = love.graphics.newFont(24)
 end
 
 function SnakeLayer:Activate()
+    self.spawnDelay = 1
     love.window.setMode(self.WindowSX, self.WindowSY)
+    local startX = love.graphics.getWidth() / 2
+    local startY = love.graphics.getHeight() / 2
+
+    self.segments = {
+        {x = startX, y = startY}
+    }
 end
 
 function SnakeLayer:Deactivate()
@@ -73,6 +76,11 @@ end
 
 function SnakeLayer:Update(dt)
     if self.alive == false then return end
+    if self.startDelay > 0 then
+        self.startDelay = utils:Clamp(self.startDelay - dt, 0, 1)
+        return
+    end
+
     self.spawnProtectionTicks = utils:Clamp(self.spawnProtectionTicks - dt, 0, 2)
 
     for i = #self.segments, 2, -1 do
@@ -154,5 +162,8 @@ function SnakeLayer:OnKeyPressed(key)
         self.direction = "down"
     end
 end
+
+function SnakeLayer:OnMousePressed(x,y,button) end
+function SnakeLayer:OnMouseMoved(x, y, dx, dy, istouch) end
 
 return SnakeLayer

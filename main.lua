@@ -4,7 +4,7 @@ local images = require("modules.images")
 function love.load()
     images:Load()
     ScreenManager:registerAllScreens()
-    ScreenManager:showScreen("SnakeLayer")
+    ScreenManager:showScreen("MenuLayer")
 end
 
 function love.draw()
@@ -17,4 +17,12 @@ end
 
 function love.keypressed(key)
     ScreenManager:OnKeyPressed(key)
+end
+
+function love.mousepressed(x, y, button)
+    ScreenManager:OnMousePressed(x, y, button)
+end
+
+function love.mousemoved(x, y, dx, dy, istouch)
+    ScreenManager:OnMouseMoved(x, y, dx, dy, istouch)
 end
