@@ -10,30 +10,13 @@ local save = {
     }
 }
 
-local function tableToString(tbl, indent)
-    local result = "{\n"
-    local nextIndent = indent .. "    "
-    for k, v in pairs(tbl) do
-        if type(k) == "string" then
-            k = string.format("%q", k)
-        end
-        if type(v) == "string" then
-            v = string.format("%q", v)
-        elseif type(v) == "table" then
-            v = tableToString(v, nextIndent)
-        end
-        result = result .. string.format("%s[%s] = %s,\n", nextIndent, k, v)
-    end
-    result = result .. indent .. "}"
-    return result
-end
-
 function save:LoadUserData()
     print("Loading user data.")
     love.filesystem.setIdentity("snake-overcomplicated")
     if love.filesystem.getInfo("save.snake") then
         print("Save file found, loading...")
-        self.Data = love.filesystem.load("save.snake")()
+        local data = love.filesystem.read("save.snake")
+        self.Data = self:DecodeSaveFile(data)
     else
         self:SaveUserData()
     end
@@ -42,8 +25,33 @@ end
 function save:SaveUserData()
     print("Saving user data.")
     love.filesystem.setIdentity("snake-overcomplicated")
-    love.filesystem.newFile("save.snake")
-    love.filesystem.write("save.snake", "return " .. tableToString(self.Data, ""))
+    local data = self:EncodeSaveFile()
+    love.filesystem.write("save.snake", data)
+end
+
+function save:EncodeSaveFile()
+    local data = ""
+
+    for category, table in pairs(self.Data) do
+        data = data .. category .. ":"
+        for k, v in pairs(table) do
+            data = data .. k .. "=" .. v .. ";"
+        end
+        data = data .. "}"
+    end
+
+    return data
+end
+
+function save:DecodeSaveFile(data)
+    local decoded = {}
+    for category, tableData in data:gmatch("(%w+):{(.-)}") do
+        decoded[category] = {}
+        for k, v in tableData:gmatch("(%w+)=(%w+);") do
+            decoded[category][k] = tonumber(v) or v
+        end
+    end
+    return decoded
 end
 
 return save
