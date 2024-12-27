@@ -15,6 +15,8 @@ SnakeLayer.spawnProtectionTicks = 0
 -- Variables that can be changed for upgrades when I eventually make that
 SnakeLayer.foodSpawnAmount = 1
 SnakeLayer.growthIncrease = 10
+SnakeLayer.WindowSX = 400
+SnakeLayer.WindowSY = 400
 
 local foodLocations = {
     {x = 100, y = 100}
@@ -27,6 +29,14 @@ function SnakeLayer:Load()
         {x = startX, y = startY}
     }
     self.font24 = love.graphics.newFont(24)
+end
+
+function SnakeLayer:Activate()
+    love.window.setMode(self.WindowSX, self.WindowSY)
+end
+
+function SnakeLayer:Deactivate()
+    love.window.setMode(800, 600)
 end
 
 function SnakeLayer:Draw()

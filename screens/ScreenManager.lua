@@ -41,7 +41,21 @@ function ScreenManager:showScreen(screenName)
     for i,v in pairs(self.screens) do
         if v.name == screenName then
             table.insert(self.currentScreens, v)
+            v:Activate()
             print("Showing screen: " .. screenName)
+            return
+        end
+    end
+
+    warn("Screen not found: " .. screenName)
+end
+
+function ScreenManager:hideScreen(screenName)
+    for i,v in pairs(self.screens) do
+        if v.name == screenName then
+            table.remove(self.currentScreens, utils:TableFind(self.currentScreens, v))
+            v:Deactivate()
+            print("Hiding screen: " .. screenName)
             return
         end
     end
