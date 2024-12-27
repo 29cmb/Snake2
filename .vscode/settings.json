@@ -1,7 +1,5 @@
 {
     "conventionalCommits.scopes": [
-        "readme",
-        "snake",
-        "menu"
+        "save"
     ]
 }

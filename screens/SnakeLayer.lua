@@ -3,17 +3,19 @@ local SNAKE_SPEED = 4.5
 local utils = require("modules.utils")
 local style = require("modules.style")
 local images = require("modules.images")
+local save = require("modules.save")
 
 SnakeLayer.name = "SnakeLayer"
 SnakeLayer.segments = {}
+SnakeLayer.segmentSize = 1
 SnakeLayer.direction = "right"
-SnakeLayer.maxLives = 1
-SnakeLayer.lives = 1
 SnakeLayer.alive = true
 SnakeLayer.spawnProtectionTicks = 0
 SnakeLayer.startDelay = 1
 
 -- Variables that can be changed for upgrades when I eventually make that
+SnakeLayer.lives = 1
+SnakeLayer.maxLives = 1
 SnakeLayer.foodSpawnAmount = 1
 SnakeLayer.growthIncrease = 10
 SnakeLayer.WindowSX = 400
@@ -28,6 +30,14 @@ function SnakeLayer:Load()
 end
 
 function SnakeLayer:Activate()
+    -- Load save data into the upgrade variables
+    self.maxLives = utils:Clamp(save.Data["Upgrades"]["Lives"], 1, 10)
+    self.lives = utils:Clamp(save.Data["Upgrades"]["Lives"], 1, 10)
+    self.foodSpawnAmount = save.Data["Upgrades"]["FoodSpawnAmount"]
+    self.growthIncrease = save.Data["Upgrades"]["GrowthIncrease"]
+    self.WindowSX = utils:Clamp(save.Data["Upgrades"]["WindowSizeX"], 400, 1600)
+    self.WindowSY = utils:Clamp(save.Data["Upgrades"]["WindowSizeY"], 400, 1000)
+
     self.spawnDelay = 1
     love.window.setMode(self.WindowSX, self.WindowSY)
     local startX = love.graphics.getWidth() / 2
@@ -102,8 +112,9 @@ function SnakeLayer:Update(dt)
 
     if (head.x + 20 > love.graphics.getWidth() or head.x < 0 or head.y + 20 > love.graphics.getHeight() or head.y < 0) and self.spawnProtectionTicks == 0 then
         self.lives = self.lives - 1
-        if self.lives == 0 then
+        if self.lives == 0 and self.alive then
             self.alive = false
+            return
         else
             head.x = love.graphics.getWidth() / 2
             head.y = love.graphics.getHeight() / 2
@@ -140,15 +151,14 @@ function SnakeLayer:Update(dt)
             end
         end
     end
+
+    if self.segmentSize ~= #self.segments then
+        table.insert(self.segments, {x = head.x, y = head.y})
+    end
 end
 
 function SnakeLayer:Grow()
-    -- Performance?
-    -- Maybe.
-    for i = self.growthIncrease, 1, -1 do
-        local lastSegment = self.segments[#self.segments]
-        table.insert(self.segments, {x = lastSegment.x, y = lastSegment.y})
-    end
+    self.segmentSize = self.segmentSize + self.growthIncrease
 end
 
 function SnakeLayer:OnKeyPressed(key)

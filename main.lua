@@ -1,10 +1,16 @@
 local ScreenManager = require("screens.ScreenManager")
 local images = require("modules.images")
+local save = require("modules.save")
 
 function love.load()
+    save:LoadUserData()
     images:Load()
     ScreenManager:registerAllScreens()
     ScreenManager:showScreen("MenuLayer")
+end
+
+function love.quit()
+    save:SaveUserData()
 end
 
 function love.draw()
