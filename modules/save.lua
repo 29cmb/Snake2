@@ -33,7 +33,7 @@ function save:EncodeSaveFile()
     local data = ""
 
     for category, table in pairs(self.Data) do
-        data = data .. category .. ":"
+        data = data .. category .. ":{"
         for k, v in pairs(table) do
             data = data .. k .. "=" .. v .. ";"
         end
