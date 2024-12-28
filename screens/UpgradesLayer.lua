@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-field
 local UpgradesLayer = {}
 local images = require("modules.images")
 local utils = require("modules.utils")

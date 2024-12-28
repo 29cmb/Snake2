@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-field
 local MenuLayer = {}
 local utils = require("modules.utils")
 local images = require("modules.images")

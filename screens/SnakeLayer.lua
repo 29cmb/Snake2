@@ -4,6 +4,7 @@ local utils = require("modules.utils")
 local style = require("modules.style")
 local images = require("modules.images")
 local save = require("modules.save")
+local ScreenManager = require("screens.ScreenManager")
 
 SnakeLayer.name = "SnakeLayer"
 SnakeLayer.segments = {}
@@ -25,6 +26,15 @@ local foodLocations = {
     {x = 100, y = 100}
 }
 
+local backButton = {
+    Sprite = images.Sprites["back"],
+    x = 10,
+    y = 100,
+    scale = 0.4,
+    width = 50,
+    height = 50
+}
+
 function SnakeLayer:Load()
     self.font24 = love.graphics.newFont(24)
 end
@@ -35,16 +45,24 @@ function SnakeLayer:Activate()
     self.lives = utils:Clamp(save.Data["Upgrades"]["Lives"], 1, 10)
     self.foodSpawnAmount = save.Data["Upgrades"]["FoodSpawnAmount"]
     self.growthIncrease = save.Data["Upgrades"]["GrowthIncrease"]
-    self.WindowSX = utils:Clamp(save.Data["Upgrades"]["WindowSizeX"], 400, 1600)
-    self.WindowSY = utils:Clamp(save.Data["Upgrades"]["WindowSizeY"], 400, 1000)
-
+    self.WindowSX = utils:Clamp(save.Data["Upgrades"]["WindowSizeX"], 400, 1400)
+    self.WindowSY = utils:Clamp(save.Data["Upgrades"]["WindowSizeY"], 400, 800)
     self.spawnDelay = 1
+    self.alive = true
     love.window.setMode(self.WindowSX, self.WindowSY)
     local startX = love.graphics.getWidth() / 2
     local startY = love.graphics.getHeight() / 2
 
+    self.segmentSize = 1
+    self.direction = "right"
+    self.spawnProtectionTicks = 0
+    self.startDelay = 1
     self.segments = {
         {x = startX, y = startY}
+    }
+
+    foodLocations = {
+        {x = 100, y = 100}
     }
 end
 
@@ -84,6 +102,13 @@ function SnakeLayer:Draw()
 
     for i = 1, self.lives do
         love.graphics.draw(images.Sprites.heart, ((i - 1) * 32) + 9, 40)
+    end
+
+    if self.alive == false then 
+        love.graphics.push()
+        love.graphics.scale(0.4,0.4)
+        love.graphics.draw(backButton.Sprite, backButton.x, backButton.y)
+        love.graphics.pop()
     end
 end
 
@@ -186,7 +211,14 @@ function SnakeLayer:OnKeyPressed(key)
     end
 end
 
-function SnakeLayer:OnMousePressed(x,y,button) end
+function SnakeLayer:OnMousePressed(x,y,button)
+    if self.alive == false then
+        if utils:CheckCollision(x, y, 1, 1, backButton.x - 5, backButton.y - 60, backButton.width, backButton.height) then
+            ScreenManager:hideScreen("SnakeLayer")
+            ScreenManager:showScreen("MenuLayer")
+        end
+    end
+end
 function SnakeLayer:OnMouseMoved(x, y, dx, dy, istouch) end
 
 return SnakeLayer
