@@ -5,7 +5,8 @@ local images = {
         ["play"] = "images/play.png",
         ["upgrades"] = "images/upgrades.png",
         ["upgradesTitle"] = "images/UpgradesTitle.png",
-        ["healthUpgrade"] = "images/health_upgrade.png"
+        ["healthUpgrade"] = "images/health_upgrade.png",
+        ["back"] = "images/back.png"
     }
 }
 

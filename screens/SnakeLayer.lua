@@ -79,7 +79,7 @@ function SnakeLayer:Draw()
         textColor = {r = 1, g = 1, b = 0}
     end
     love.graphics.setFont(self.font24)
-    style:DropShadow("Score: " .. #self.segments - 1, 10, 10, textColor, love.graphics.getWidth(), "left", 3, 90)
+    style:DropShadow("Points: " .. #self.segments - 1, 10, 10, textColor, love.graphics.getWidth(), "left", 3, 90)
     love.graphics.setColor(1, 1, 1)
 
     for i = 1, self.lives do
@@ -121,6 +121,7 @@ function SnakeLayer:Update(dt)
                 save.Data["Statistics"]["Highscore"] = #self.segments - 1
             end
             save.Data["Statistics"]["TotalGames"] = save.Data["Statistics"]["TotalGames"] + 1
+            save.Data["Statistics"]["Points"] = save.Data["Statistics"]["Points"] + #self.segments - 1
             return
         else
             head.x = love.graphics.getWidth() / 2
@@ -154,6 +155,7 @@ function SnakeLayer:Update(dt)
                     save.Data["Statistics"]["Highscore"] = #self.segments - 1
                 end
                 save.Data["Statistics"]["TotalGames"] = save.Data["Statistics"]["TotalGames"] + 1
+                save.Data["Statistics"]["Points"] = save.Data["Statistics"]["Points"] + #self.segments - 1
             else
                 head.x = love.graphics.getWidth() / 2
                 head.y = love.graphics.getHeight() / 2

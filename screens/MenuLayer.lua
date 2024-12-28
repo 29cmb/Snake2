@@ -14,7 +14,8 @@ local buttons = {
         hovering = false,
         initialScale = 1.3,
         scale = 1.3,
-        clicked = function()
+        clicked = function(this)
+            this.hovering = false
             ScreenManager:hideScreen("MenuLayer")
             ScreenManager:showScreen("SnakeLayer")
         end
@@ -26,7 +27,8 @@ local buttons = {
         hovering = false,
         initialScale = 1,
         scale = 1,
-        clicked = function()
+        clicked = function(this)
+            this.hovering = false
             ScreenManager:hideScreen("MenuLayer")
             ScreenManager:showScreen("UpgradesLayer")
         end
@@ -77,7 +79,7 @@ function MenuLayer:OnKeyPressed(key) end
 function MenuLayer:OnMousePressed(x,y,button)
     for _,button in pairs(buttons) do
         if button.hovering then
-            button.clicked()
+            button.clicked(button)
         end
     end
 end

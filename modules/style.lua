@@ -1,4 +1,6 @@
 local style = {}
+style.font24 = love.graphics.newFont(24)
+style.font14 = love.graphics.newFont(14)
 
 function style:DropShadow(text, x, y, textColor, limit, alignment, distance, angle)
     local offsetX = distance * math.cos(angle)

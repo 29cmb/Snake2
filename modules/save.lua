@@ -9,13 +9,23 @@ local save = {
         },
         ["Statistics"] = {
             ["Highscore"] = 0,
-            ["TotalGames"] = 0
-        }
+            ["TotalGames"] = 0,
+            ["Points"] = 0
+        },
+        ["UpgradeLevels"] = {}
     }
 }
+local Upgrades = require("data.upgrades")
+
+function save:Preload()
+    for name,_ in pairs(Upgrades) do 
+        self.Data["UpgradeLevels"][name] = 1
+    end
+end
 
 function save:LoadUserData()
     print("Loading user data.")
+    self:Preload()
     love.filesystem.setIdentity("snake-overcomplicated")
     if love.filesystem.getInfo("save.snake") then
         print("Save file found, loading...")
