@@ -11,12 +11,48 @@ UpgradesLayer.name = "UpgradesLayer"
 local upgradeButtons = {
     {
         Sprite = images.Sprites["healthUpgrade"],
-        x = 200,
+        x = 175,
         y = 250,
         hovering = false,
         initialScale = 1,
         scale = 1,
         upgrade = upgrades["Lives"]
+    },
+    {
+        Sprite = images.Sprites["foodSpawnUpgrade"],
+        x = 325,
+        y = 250,
+        hovering = false,
+        initialScale = 1,
+        scale = 1,
+        upgrade = upgrades["FoodSpawn"]
+    },
+    {
+        Sprite = images.Sprites["snakeGrowthUpgrade"],
+        x = 475,
+        y = 250,
+        hovering = false,
+        initialScale = 1,
+        scale = 1,
+        upgrade = upgrades["GrowthIncrease"]
+    },
+    {
+        Sprite = images.Sprites["windowXUpgrade"],
+        x = 625,
+        y = 250,
+        hovering = false,
+        initialScale = 1,
+        scale = 1,
+        upgrade = upgrades["WindowSizeX"]
+    },
+    {
+        Sprite = images.Sprites["windowYUpgrade"],
+        x = 175,
+        y = 400,
+        hovering = false,
+        initialScale = 1,
+        scale = 1,
+        upgrade = upgrades["WindowSizeY"]
     }
 }
 
@@ -43,7 +79,7 @@ function PurchaseUpgrade(button)
     then
         save.Data["Statistics"]["Points"] = save.Data["Statistics"]["Points"] - button.upgrade["PricePerLevel"] * save.Data["UpgradeLevels"][button.upgrade["Name"]]
         save.Data["UpgradeLevels"][button.upgrade["Name"]] = save.Data["UpgradeLevels"][button.upgrade["Name"]] + 1
-        save.Data["Upgrades"][button.upgrade["SaveKey"]] = button.upgrade["Increase"] * save.Data["UpgradeLevels"][button.upgrade["Name"]]
+        save.Data["Upgrades"][button.upgrade["SaveKey"]] = button.upgrade["Default"] + (button.upgrade["Increase"] * (save.Data["UpgradeLevels"][button.upgrade["Name"]] - 1))
     end
 end
 
@@ -74,24 +110,39 @@ function UpgradesLayer:Draw()
     love.graphics.printf("Points: " .. save.Data["Statistics"]["Points"], 0, 120, love.graphics.getWidth(), "center")
     love.graphics.setColor(1,1,1)
     for _, button in pairs(upgradeButtons) do
-        if button.upgrade["PricePerLevel"] * save.Data["UpgradeLevels"][button.upgrade["Name"]] > save.Data["Statistics"]["Points"] then 
+        if button.upgrade["PricePerLevel"] * save.Data["UpgradeLevels"][button.upgrade["Name"]] > save.Data["Statistics"]["Points"] or save.Data["UpgradeLevels"][button.upgrade["Name"]] >= button.upgrade["MaxLevel"] then 
             love.graphics.setColor(0.5,0.5,0.5)
         end
         love.graphics.draw(button.Sprite, button.x, button.y, 0, button.scale, button.scale, button.Sprite:getWidth() / 2, button.Sprite:getHeight() / 2)
         love.graphics.setColor(1,1,1)
-        love.graphics.setColor(0.5,1,0.5)
-        love.graphics.printf("$" .. button.upgrade["PricePerLevel"] * save.Data["UpgradeLevels"][button.upgrade["Name"]], button.x - button.width / 2, button.y + 20, button.width, "center")
-        love.graphics.setColor(1,1,1)
-        if button.hovering then 
-            love.graphics.setColor(0,0,0)
-            love.graphics.rectangle("fill", love.mouse:getX() - 5, love.mouse:getY() - 5, 210, 130, 10, 10)
-            love.graphics.setColor(0.2,0.2,0.2)
-            love.graphics.rectangle("fill", love.mouse:getX(), love.mouse:getY(), 200, 120, 10, 10)
-            love.graphics.setColor(1,1,1)
-            love.graphics.print(button.upgrade["DisplayName"], love.mouse:getX() + 10, love.mouse:getY() + 10)
+        love.graphics.setColor(0,1,128/255)
+
+        local priceText = "$" .. button.upgrade["PricePerLevel"] * save.Data["UpgradeLevels"][button.upgrade["Name"]]
+        local priceX = button.x - button.width / 2
+        local priceY = button.y + 20
+        style:Stroke(priceText, priceX, priceY, {r = 54/255, g = 214/255, b = 134/255}, {r = 0, g = 0, b = 0}, button.width, "center")
+    end
+
+    for _, button in pairs(upgradeButtons) do
+        if button.hovering then
+            local mouseX, mouseY = love.mouse.getX(), love.mouse.getY()
+            local boxWidth, boxHeight = 250, 120
+            local padding = 10
+            local boxX, boxY = mouseX, mouseY
+    
+            if mouseX + boxWidth + padding > love.graphics.getWidth() then
+                boxX = mouseX - boxWidth - padding
+            end
+    
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.rectangle("fill", boxX - 5, boxY - 5, boxWidth + 10, boxHeight + 10, 10, 10)
+            love.graphics.setColor(0.2, 0.2, 0.2)
+            love.graphics.rectangle("fill", boxX, boxY, boxWidth, boxHeight, 10, 10)
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.print(button.upgrade["DisplayName"], boxX + 10, boxY + 10)
             love.graphics.setFont(style.font14)
-            love.graphics.printf(button.upgrade["Description"], love.mouse:getX() + 10, love.mouse:getY() + 40, 200, "left")
-            love.graphics.printf("Level " .. save.Data["UpgradeLevels"][button.upgrade["Name"]] .. "/" .. button.upgrade["MaxLevel"], love.mouse:getX() - 10, love.mouse:getY() + 100, 200, "right")
+            love.graphics.printf(button.upgrade["Description"], boxX + 10, boxY + 40, boxWidth - 20, "left")
+            love.graphics.printf("Level " .. save.Data["UpgradeLevels"][button.upgrade["Name"]] .. "/" .. button.upgrade["MaxLevel"], boxX - 10, boxY + 100, boxWidth, "right")
         end
     end
 

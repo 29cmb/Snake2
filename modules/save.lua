@@ -31,6 +31,9 @@ function save:LoadUserData()
         print("Save file found, loading...")
         local data = love.filesystem.read("save.snake")
         local saveData = self:DecodeSaveFile(data)
+        for _,v in pairs(Upgrades) do
+            saveData["Upgrades"][v["SaveKey"]] = v["Default"] + (v["Increase"] * (saveData["UpgradeLevels"][v["Name"]] - 1))
+        end
 
         for category, table in pairs(saveData) do
             for k, v in pairs(table) do
@@ -71,6 +74,23 @@ function save:DecodeSaveFile(data)
             decoded[category][k] = tonumber(v) or v
         end
     end
+
+    for name, defaultTable in pairs(self.Data) do
+        if not decoded[name] then
+            print("Missing category: " .. name .. ". Adding default values.")
+            decoded[name] = defaultTable
+            corrupt = true
+        else
+            for key, defaultValue in pairs(defaultTable) do
+                if decoded[name][key] == nil then
+                    print("Missing key: " .. key .. " in category: " .. name .. ". Adding default value.")
+                    decoded[name][key] = defaultValue
+                    corrupt = true
+                end
+            end
+        end
+    end 
+
     return decoded
 end
 
