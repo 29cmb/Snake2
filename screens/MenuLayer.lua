@@ -11,8 +11,8 @@ local buttons = {
         x = (love.graphics.getWidth() / 2),
         y = 450,
         hovering = false,
-        initialScale = 1.3,
-        scale = 1.3,
+        initialScale = 1.4,
+        scale = 1.4,
         clicked = function(this)
             this.hovering = false
             ScreenManager:hideScreen("MenuLayer")

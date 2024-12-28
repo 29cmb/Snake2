@@ -5,6 +5,8 @@ local save = require("modules.save")
 function love.load()
     save:LoadUserData()
     images:Load()
+    love.window.setIcon(love.image.newImageData("images/icon.png"))
+    love.window.setTitle("Snake: Overcomplicated Edition")
     ScreenManager:registerAllScreens()
     ScreenManager:showScreen("MenuLayer")
 end
