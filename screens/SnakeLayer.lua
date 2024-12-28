@@ -172,7 +172,7 @@ function SnakeLayer:Update(dt)
     end
 
     for index,segment in pairs(self.segments) do
-        if utils:CheckCollision(head.x, head.y, 20, 20, segment.x, segment.y, 20, 20) and index > 17 and self.spawnProtectionTicks == 0 then
+        if utils:CheckCollision(head.x, head.y, 20, 20, segment.x, segment.y, 20, 20) and index > 15 and self.spawnProtectionTicks == 0 then
             self.lives = self.lives - 1
             if self.lives == 0 then
                 self.alive = false
