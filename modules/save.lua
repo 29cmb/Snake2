@@ -6,6 +6,10 @@ local save = {
             ["Lives"] = 1,
             ["WindowSizeX"] = 400,
             ["WindowSizeY"] = 400
+        },
+        ["Statistics"] = {
+            ["Highscore"] = 0,
+            ["TotalGames"] = 0
         }
     }
 }
@@ -16,7 +20,13 @@ function save:LoadUserData()
     if love.filesystem.getInfo("save.snake") then
         print("Save file found, loading...")
         local data = love.filesystem.read("save.snake")
-        self.Data = self:DecodeSaveFile(data)
+        local saveData = self:DecodeSaveFile(data)
+
+        for category, table in pairs(saveData) do
+            for k, v in pairs(table) do
+                self.Data[category][k] = v
+            end
+        end
     else
         self:SaveUserData()
     end
@@ -37,7 +47,7 @@ function save:EncodeSaveFile()
         for k, v in pairs(table) do
             data = data .. k .. "=" .. v .. ";"
         end
-        data = data .. "}"
+        data = data .. "}|"
     end
 
     return data
@@ -45,7 +55,7 @@ end
 
 function save:DecodeSaveFile(data)
     local decoded = {}
-    for category, tableData in data:gmatch("(%w+):{(.-)}") do
+    for category, tableData in data:gmatch("(%w+):{(.-)}|") do
         decoded[category] = {}
         for k, v in tableData:gmatch("(%w+)=(%w+);") do
             decoded[category][k] = tonumber(v) or v

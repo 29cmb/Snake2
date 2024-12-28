@@ -74,10 +74,13 @@ function SnakeLayer:Draw()
     end
 
     love.graphics.setColor(1, 1, 1)
-
-    -- UI
+    local textColor = {r = 1, g = 1, b = 1}
+    if #self.segments - 1 > save.Data["Statistics"]["Highscore"] then
+        textColor = {r = 1, g = 1, b = 0}
+    end
     love.graphics.setFont(self.font24)
-    style:DropShadow("Score: " .. #self.segments - 1, 10, 10, love.graphics.getWidth(), "left", 3, 90)
+    style:DropShadow("Score: " .. #self.segments - 1, 10, 10, textColor, love.graphics.getWidth(), "left", 3, 90)
+    love.graphics.setColor(1, 1, 1)
 
     for i = 1, self.lives do
         love.graphics.draw(images.Sprites.heart, ((i - 1) * 32) + 9, 40)
@@ -114,6 +117,10 @@ function SnakeLayer:Update(dt)
         self.lives = self.lives - 1
         if self.lives == 0 and self.alive then
             self.alive = false
+            if #self.segments - 1 > save.Data["Statistics"]["Highscore"] then
+                save.Data["Statistics"]["Highscore"] = #self.segments - 1
+            end
+            save.Data["Statistics"]["TotalGames"] = save.Data["Statistics"]["TotalGames"] + 1
             return
         else
             head.x = love.graphics.getWidth() / 2
@@ -143,6 +150,10 @@ function SnakeLayer:Update(dt)
             self.lives = self.lives - 1
             if self.lives == 0 then
                 self.alive = false
+                if #self.segments - 1 > save.Data["Statistics"]["Highscore"] then
+                    save.Data["Statistics"]["Highscore"] = #self.segments - 1
+                end
+                save.Data["Statistics"]["TotalGames"] = save.Data["Statistics"]["TotalGames"] + 1
             else
                 head.x = love.graphics.getWidth() / 2
                 head.y = love.graphics.getHeight() / 2
