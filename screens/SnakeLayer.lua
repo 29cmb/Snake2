@@ -129,13 +129,13 @@ function SnakeLayer:Update(dt)
     local head = self.segments[1]
 
     if self.direction == "right" then
-        head.x = head.x + SNAKE_SPEED
+        head.x = head.x + SNAKE_SPEED * (dt * 60)
     elseif self.direction == "left" then
-        head.x = head.x - SNAKE_SPEED
+        head.x = head.x - SNAKE_SPEED * (dt * 60)
     elseif self.direction == "up" then
-        head.y = head.y - SNAKE_SPEED
+        head.y = head.y - SNAKE_SPEED * (dt * 60)
     elseif self.direction == "down" then
-        head.y = head.y + SNAKE_SPEED
+        head.y = head.y + SNAKE_SPEED * (dt * 60)
     end
 
     if (head.x + 20 > love.graphics.getWidth() or head.x < 0 or head.y + 20 > love.graphics.getHeight() or head.y < 0) and self.spawnProtectionTicks == 0 then

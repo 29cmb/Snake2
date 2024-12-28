@@ -3,10 +3,10 @@ local images = require("modules.images")
 local save = require("modules.save")
 
 function love.load()
+    love.window.setIcon(love.image.newImageData("/images/icon.png"))
+    love.window.setTitle("Snake: Overcomplicated Edition")
     save:LoadUserData()
     images:Load()
-    love.window.setIcon(love.image.newImageData("images/icon.png"))
-    love.window.setTitle("Snake: Overcomplicated Edition")
     ScreenManager:registerAllScreens()
     ScreenManager:showScreen("MenuLayer")
 end
