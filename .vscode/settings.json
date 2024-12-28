@@ -3,7 +3,8 @@
         "save",
         "menu",
         "snake",
-        "upgrades"
+        "upgrades",
+        "readme"
     ],
     "Lua.runtime.version": "Lua 5.4",
     "Lua.runtime.special": {
