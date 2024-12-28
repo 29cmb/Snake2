@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 local MenuLayer = {}
 local utils = require("modules.utils")
 local images = require("modules.images")
@@ -11,11 +12,23 @@ local buttons = {
         x = (love.graphics.getWidth() / 2),
         y = 450,
         hovering = false,
-        initialScale = 1.2,
-        scale = 1.2,
+        initialScale = 1.3,
+        scale = 1.3,
         clicked = function()
             ScreenManager:hideScreen("MenuLayer")
             ScreenManager:showScreen("SnakeLayer")
+        end
+    },
+    {
+        Sprite = images.Sprites["upgrades"],
+        x = ((love.graphics.getWidth() / 3) * 2) + 30,
+        y = 450,
+        hovering = false,
+        initialScale = 1,
+        scale = 1,
+        clicked = function()
+            ScreenManager:hideScreen("MenuLayer")
+            ScreenManager:showScreen("UpgradesLayer")
         end
     }
 }
@@ -27,13 +40,9 @@ function MenuLayer:Load()
     end
 end
 
-function MenuLayer:Activate()
+function MenuLayer:Activate() end
 
-end
-
-function MenuLayer:Deactivate()
-
-end
+function MenuLayer:Deactivate() end
 
 function MenuLayer:Draw()
     love.graphics.setBackgroundColor(1,1,1)

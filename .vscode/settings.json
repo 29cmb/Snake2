@@ -1,0 +1,20 @@
+{
+    "conventionalCommits.scopes": [
+        "save",
+        "menu",
+        "snake",
+        "upgrades"
+    ],
+    "Lua.runtime.version": "Lua 5.4",
+    "Lua.runtime.special": {
+        "love.filesystem.load": "loadfile"
+    },
+    "Lua.workspace.library": [
+        "${3rd}/love2d/library"
+    ],
+    "Lua.diagnostics.disable": [
+        "lowercase-global",
+        "param-type-mismatch",
+        "assign-type-mismatch"
+    ]
+}

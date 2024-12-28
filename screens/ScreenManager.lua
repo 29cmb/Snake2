@@ -6,6 +6,7 @@ ScreenManager.currentScreens = {}
 function ScreenManager:registerAllScreens()
     self:registerScreen(require("screens.MenuLayer"))
     self:registerScreen(require("screens.SnakeLayer"))
+    self:registerScreen(require("screens.UpgradesLayer"))
 end
 
 function ScreenManager:registerScreen(screen)
